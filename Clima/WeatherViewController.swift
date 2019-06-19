@@ -19,24 +19,24 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     let APP_ID = "c569e77e79b9d6ffc631f285f887b052"
     /***Get your own App ID at https://openweathermap.org/appid ****/
     
-
+    
     //TODO: Declare instance variables here
     let locationManager = CLLocationManager()
     let weatherDataModel = WeatherDataModel()
-
+    
     
     //Pre-linked IBOutlets
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
         //TODO:Set up the location manager here.
-    locationManager.delegate = self
+        locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
@@ -44,15 +44,13 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         
     }
     
-    
-    
     //MARK: - Networking
     /***************************************************************/
     
     //Write the getWeatherData method here:
     func getWeatherData (url : String, parameters : [String : String]) {
         Alamofire.request(url, method: .get, parameters: parameters).responseJSON {
-           response in
+            response in
             if response.result.isSuccess {
                 print("Success Got the weather data")
                 
@@ -68,32 +66,26 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         }
         
     }
-
-    
-    
-    
-    
-    
     //MARK: - JSON Parsing
     /***************************************************************/
-   
+    
     
     //Write the updateWeatherData method here:
     func updateWeatherData (json : JSON) {
         if let tempResult = json ["main"]["temp"].double {
-        weatherDataModel.temperature = Int(tempResult - 273.15)
-        weatherDataModel.city = json ["name"].stringValue
-        weatherDataModel.condition = json["weather"][0]["id"].intValue
-        weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
-    
+            weatherDataModel.temperature = Int(tempResult - 273.15)
+            weatherDataModel.city = json ["name"].stringValue
+            weatherDataModel.condition = json["weather"][0]["id"].intValue
+            weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
+            
             updateUIWithWeatherData()
         }
         else {
             cityLabel.text = "Weather Unavailable"
         }
-        }
+    }
     
-
+    
     
     
     
@@ -109,14 +101,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         weatherIcon.image = UIImage(named: weatherDataModel.weatherIconName)
         
     }
-    
-    
-    
-    
     //MARK: - Location Manager Delegate Methods
     /***************************************************************/
-    
-    
     //Write the didUpdateLocations method here:
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations[locations.count - 1]
@@ -139,9 +125,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         print(error)
         cityLabel.text = "Location Unavailable"
     }
-    
-
-    
     //MARK: - Change City Delegate methods
     /***************************************************************/
     
@@ -151,8 +134,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         let params : [String : String] = ["q" : city, "appid" : APP_ID]
         getWeatherData(url: WEATHER_URL, parameters: params)
     }
-
-    
     //Write the PrepareForSegue Method here
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
