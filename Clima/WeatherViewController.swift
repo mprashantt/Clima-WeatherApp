@@ -57,6 +57,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
                 let weatherJSON : JSON = JSON(response.result.value!)
                 
                 self.updateWeatherData(json: weatherJSON)
+                print(weatherJSON)
                 
             }
             else {
@@ -84,11 +85,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
             cityLabel.text = "Weather Unavailable"
         }
     }
-    
-    
-    
-    
-    
+   
     //MARK: - UI Updates
     /***************************************************************/
     
@@ -127,7 +124,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     }
     //MARK: - Change City Delegate methods
     /***************************************************************/
-    
     
     //Write the userEnteredANewCityName Delegate method here:
     func userEnteredNewCityName(city: String) {
