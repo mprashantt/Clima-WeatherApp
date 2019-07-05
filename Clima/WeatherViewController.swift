@@ -12,6 +12,7 @@ import Alamofire
 import SwiftyJSON
 
 
+
 class WeatherViewController: UIViewController, CLLocationManagerDelegate, ChangeCityDelegate {
     
     //Constants
@@ -36,6 +37,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         
         
         //TODO:Set up the location manager here.
+        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         locationManager.requestWhenInUseAuthorization()
@@ -76,6 +78,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         if let tempResult = json ["main"]["temp"].double {
             weatherDataModel.temperature = Int(tempResult - 273.15)
             weatherDataModel.city = json ["name"].stringValue
+            weatherDataModel.country = json ["sys"]["country"].stringValue
             weatherDataModel.condition = json["weather"][0]["id"].intValue
             weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
             
@@ -83,6 +86,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         }
         else {
             cityLabel.text = "Weather Unavailable"
+//            cityLabel.textColor = UIColor.red
+            temperatureLabel.text = "!!"
+//            temperatureLabel.textColor = UIColor.red
         }
     }
    
@@ -93,7 +99,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     //Write the updateUIWithWeatherData method here:
     
     func updateUIWithWeatherData() {
-        cityLabel.text = weatherDataModel.city
+        cityLabel.text = weatherDataModel.city + " , " + weatherDataModel.country
         temperatureLabel.text = "\(weatherDataModel.temperature)°"
         weatherIcon.image = UIImage(named: weatherDataModel.weatherIconName)
         
@@ -121,6 +127,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
         cityLabel.text = "Location Unavailable"
+        
     }
     //MARK: - Change City Delegate methods
     /***************************************************************/
